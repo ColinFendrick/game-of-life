@@ -1,11 +1,11 @@
-import { observable } from 'mobx'
+import { observable, action } from 'mobx'
 
 class Store {
   @observable size = {
     'width': 40,
     'height': 40
   }
-  @observable active= [
+  @observable active = [
     [6, 1],
     [7, 4],
     [1, 3]
@@ -16,6 +16,12 @@ class Store {
       if (arr[i][0] === cell[0] && arr[i][1] === cell[1]) {
         return true
       }
+    }
+  }
+
+  @action update = (arr, cell) => {
+    if (this.searchArray(arr, cell)) {
+      console.log('test')
     }
   }
 }
