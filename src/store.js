@@ -27,7 +27,8 @@ class Store {
 
   @action update = (arr, cell) => {
     if (this.searchArray(arr, cell)) {
-      console.log('heetsds')
+      let index = this.searchArray(arr, cell)
+      this.active.splice(index - 1, 1)
     } else {
       this.active.push(cell)
     }
