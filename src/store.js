@@ -14,7 +14,8 @@ class Store {
   }
 
   @observable active = [
-    [5, 1]
+    [5, 1],
+    [5, 2]
   ]
 
   @observable searchArray = (arr, cell) => {
@@ -34,7 +35,6 @@ class Store {
     } else {
       this.active.push(cell)
     }
-    console.log(cell)
   }
 
   @action alive = cell => {
@@ -52,6 +52,7 @@ class Store {
     let potentials = []
     let counts = {}
 
+    // Put all neighbors of active cells into an array
     for (let i = 0; i < arrRows.length; i++) {
       potentials.push([arrRows[i], arrCols[i] + 1])
       potentials.push([arrRows[i] + 1, arrCols[i] + 1])
@@ -62,11 +63,20 @@ class Store {
       potentials.push([arrRows[i] - 1, arrCols[i]])
       potentials.push([arrRows[i] - 1, arrCols[i] + 1])
     }
+    // Count occurances of those neighbors
     for (let i = 0; i < potentials.length; i++) {
       let pos = potentials[i]
       counts[pos] = counts[pos] ? counts[pos] + 1 : 1
     }
-    console.log(counts)
+    // Create arrays where the duos and trios occur
+    let duos = _.pickBy(counts, v => v === 2)
+    let trios = _.pickBy(counts, v => v === 3)
+    // Create a unique array of strings of the neighboring potential cells
+    let uniques = []
+    for (let i = 0; i < potentials.length; i++) {
+      uniques.push(`${potentials[i][0]},${potentials[i][1]}`)
+    }
+    uniques = _.uniq(uniques)
 
     // for (let i = 0; i <= this.size.rows; i++) {
     //   for (let j = 0; j <= this.size.cols; j++) {
