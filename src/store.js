@@ -19,6 +19,12 @@ class Store {
     }
   }
 
+  @action change = (key, value) => {
+    let newSize = {...this.size}
+    newSize[key] = parseInt(value, 10)
+    this.size = newSize
+  }
+
   @action update = (arr, cell) => {
     if (this.searchArray(arr, cell)) {
       console.log('heetsds')
