@@ -2,8 +2,8 @@ import { observable, action } from 'mobx'
 
 class Store {
   @observable size = {
-    'width': 40,
-    'height': 40
+    'width': 5,
+    'height': 3
   }
   @observable active = [
     [6, 1],

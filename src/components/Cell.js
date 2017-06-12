@@ -10,6 +10,6 @@ export default observer(({ pos }) => {
     style={{'gridRow': `${pos[0]}`, 'gridColumn': `${pos[1]}`}}
     onClick={() => store.update(slicedStore, pos)}
   >
-    {pos}
+    width: {pos[0]} height: {pos[1]}
   </div>
 })
