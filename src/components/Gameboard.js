@@ -8,19 +8,17 @@ class Gameboard extends Component {
   render () {
     const Repeat = props => {
       let items = []
-      for (let i = 0; i <= props.width; i++) {
-        for (let j = 0; j <= props.height; j++) {
+      for (let i = 0; i <= props.rows; i++) {
+        for (let j = 0; j <= props.cols; j++) {
           items.push(props.children(i, j))
         }
       }
-      return <div>{items}</div>
+      return <div className='Gameboard'>{items}</div>
     }
 
-    return <div className='Gameboard'>
-      <Repeat width={store.size.width} height={store.size.height}>
-        {(i, j) => <Cell key={[i, j]} pos={[i, j]} />}
-      </Repeat>
-    </div>
+    return <Repeat rows={store.size.rows} cols={store.size.cols}>
+      {(i, j) => <Cell key={[i, j]} pos={[i, j]} />}
+    </Repeat>
   }
 }
 
