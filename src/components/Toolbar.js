@@ -8,15 +8,17 @@ export default observer(() => {
   }
   return <div className='Toolbar'>
     <div className='tool-input'>
-      <input type='range' min='0' max='120'
+      <input type='range' min='30' max='120'
         value={store.size.width}
+        defaultValue='30'
         onChange={e => store.change('cols', e.target.value)}
       />
       Width {store.size.cols}
     </div>
     <div className='tool-input'>
-      <input type='range' min='0' max='120'
+      <input type='range' min='30' max='120'
         value={store.size.height}
+        defaultValue='30'
         onChange={e => store.change('rows', e.target.value)}
       />
       Height {store.size.rows}
