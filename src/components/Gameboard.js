@@ -13,7 +13,8 @@ class Gameboard extends Component {
     }
     return <div className='Gameboard'>
       {cells}
-      <Cell test='hey' />
+      <Cell pos={[4, 9]} />
+      <Cell pos={[6, 1]} />
     </div>
   }
 }
