@@ -14,9 +14,11 @@ body {
 
 #root {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: space-around;
   align-items: center;
   background-color: #ddd;
+  text-align: center;
 }
 
 .Gameboard {
@@ -39,5 +41,17 @@ body {
 
   .active {
     background-color: yellow;
+  }
+}
+
+.Toolbar {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin: 0;
+
+  .tool-button {
+    width: 24px;
+    margin: 0;
   }
 }
