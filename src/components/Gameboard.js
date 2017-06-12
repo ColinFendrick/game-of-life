@@ -16,6 +16,8 @@ class Gameboard extends Component {
       <Cell pos={[4, 9]} />
       <Cell pos={[6, 1]} />
       <Cell pos={[1, 1]} />
+      <Cell pos={[1, 3]} />
+      <Cell pos={[7, 4]} />
     </div>
   }
 }
