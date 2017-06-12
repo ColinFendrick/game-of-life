@@ -6,9 +6,12 @@ class Store {
     'cols': 30
   }
   @observable active = [
-    [6, 1],
-    [1, 3],
-    [1, 1]
+    [2, 2],
+    [2, 3],
+    [3, 3],
+    [3, 4],
+    [4, 2],
+    [4, 4]
   ]
 
   @observable searchArray = (arr, cell) => {
