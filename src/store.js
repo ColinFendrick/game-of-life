@@ -14,13 +14,7 @@ class Store {
   }
 
   @observable active = [
-    [2, 2],
-    [2, 3],
-    [3, 3],
-    [3, 4],
-    [4, 2],
-    [4, 4],
-    [22, 1]
+    [5, 1]
   ]
 
   @observable searchArray = (arr, cell) => {
@@ -40,6 +34,7 @@ class Store {
     } else {
       this.active.push(cell)
     }
+    console.log(cell)
   }
 
   @action alive = cell => {
@@ -54,22 +49,40 @@ class Store {
     const arr = store.active.map(s => s.slice(0, 2))
     const arrRows = arr.map(x => x[0])
     const arrCols = arr.map(x => x[1])
+    let potentials = []
+    let counts = {}
 
-    for (let i = 0; i <= this.size.rows; i++) {
-      for (let j = 0; j <= this.size.cols; j++) {
-        let prox = 0
-        for (let k = 0; k < arrRows.length; k++) {
-          if (arrRows[k] === i || arrRows[k] + 1 === i || arrRows[k] - 1 === i) {
-            if (arrCols[k] === j || arrCols[k] + 1 === j || arrCols[k] - 1 === j) {
-              prox++
-            }
-          }
-          if (prox === 2 || prox === 3) {
-            this.alive([i, j])
-          }
-        }
-      }
+    for (let i = 0; i < arrRows.length; i++) {
+      potentials.push([arrRows[i], arrCols[i] + 1])
+      potentials.push([arrRows[i] + 1, arrCols[i] + 1])
+      potentials.push([arrRows[i] + 1, arrCols[i]])
+      potentials.push([arrRows[i] + 1, arrCols[i] - 1])
+      potentials.push([arrRows[i], arrCols[i] - 1])
+      potentials.push([arrRows[i] - 1, arrCols[i] - 1])
+      potentials.push([arrRows[i] - 1, arrCols[i]])
+      potentials.push([arrRows[i] - 1, arrCols[i] + 1])
     }
+    for (let i = 0; i < potentials.length; i++) {
+      let pos = potentials[i]
+      counts[pos] = counts[pos] ? counts[pos] + 1 : 1
+    }
+    console.log(counts)
+
+    // for (let i = 0; i <= this.size.rows; i++) {
+    //   for (let j = 0; j <= this.size.cols; j++) {
+    //     let prox = 0
+    //     for (let k = 0; k < arrRows.length; k++) {
+    //       if (arrRows[k] === i || arrRows[k] + 1 === i || arrRows[k] - 1 === i) {
+    //         if (arrCols[k] === j || arrCols[k] + 1 === j || arrCols[k] - 1 === j) {
+    //           prox++
+    //         }
+    //       }
+    //       if (prox === 2 || prox === 3) {
+    //         this.alive([i, j])
+    //       }
+    //     }
+    //   }
+    // }
   }
 }
 
