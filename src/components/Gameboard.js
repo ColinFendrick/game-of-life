@@ -6,18 +6,18 @@ import Cell from './Cell'
 
 class Gameboard extends Component {
   render () {
-    const cells = () => {
-      for (let i = 0; i <= store.size.width; i++) {
-        return <Cell key={i} test={i} />
+    const Repeat = props => {
+      let items = []
+      for (let i = 0; i < props.width; i++) {
+        items.push(props.children(i))
       }
+      return <div>{items}</div>
     }
+
     return <div className='Gameboard'>
-      {cells}
-      <Cell pos={[4, 9]} />
-      <Cell pos={[6, 1]} />
-      <Cell pos={[1, 1]} />
-      <Cell pos={[1, 3]} />
-      <Cell pos={[7, 4]} />
+      <Repeat width={store.size.width}>
+        {index => <Cell key={index} pos={[index, 3]} />}
+      </Repeat>
     </div>
   }
 }
