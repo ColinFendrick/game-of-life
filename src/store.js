@@ -1,10 +1,12 @@
 import { observable, action } from 'mobx'
+import _ from 'lodash'
 
 class Store {
   @observable size = {
     'rows': 30,
     'cols': 30
   }
+
   @observable active = [
     [2, 2],
     [2, 3],
@@ -30,6 +32,7 @@ class Store {
 
   @action update = cell => {
     const arr = this.active.map(s => s.slice(0, 2))
+
     if (this.searchArray(arr, cell)) {
       let index = this.searchArray(arr, cell)
       this.active.splice(index - 1, 1)
@@ -44,9 +47,9 @@ class Store {
 
   @action check = () => {
     const arr = store.active.map(s => s.slice(0, 2))
-    for (let i = 0; i < this.active.length; i++) {
-      console.log(this.active[i])
-    }
+    const rows = arr.map(x => x[0])
+    const columns = arr.map(x => x[1])
+    console.log(rows, columns)
   }
 }
 
