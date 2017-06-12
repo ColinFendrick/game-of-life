@@ -1,4 +1,5 @@
 import { observable, action } from 'mobx'
+import _ from 'lodash'
 
 class Store {
   @observable size = {
@@ -56,8 +57,16 @@ class Store {
 
     for (let i = 0; i <= this.size.rows; i++) {
       for (let j = 0; j <= this.size.cols; j++) {
-        if (arrRows.includes(i) && arrCols.includes(j)) {
-          this.alive([i, j])
+        let prox = 0
+        for (let k = 0; k < arrRows.length; k++) {
+          if (arrRows[k] === i || arrRows[k] + 1 === i || arrRows[k] - 1 === i) {
+            if (arrCols[k] === j || arrCols[k] + 1 === j || arrCols[k] - 1 === j) {
+              prox++
+            }
+          }
+          if (prox === 2 || prox === 3) {
+            this.alive([i, j])
+          }
         }
       }
     }
