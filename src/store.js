@@ -28,12 +28,24 @@ class Store {
     this.size = newSize
   }
 
-  @action update = (arr, cell) => {
+  @action update = cell => {
+    const arr = this.active.map(s => s.slice(0, 2))
     if (this.searchArray(arr, cell)) {
       let index = this.searchArray(arr, cell)
       this.active.splice(index - 1, 1)
     } else {
       this.active.push(cell)
+    }
+  }
+
+  @action start = () => {
+    console.log('hey')
+  }
+
+  @action check = () => {
+    const arr = store.active.map(s => s.slice(0, 2))
+    for (let i = 0; i < this.active.length; i++) {
+      console.log(this.active[i])
     }
   }
 }

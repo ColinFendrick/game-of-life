@@ -3,9 +3,6 @@ import store from '../store'
 import { observer } from 'mobx-react'
 
 export default observer(() => {
-  const _button = () => {
-    console.log('hey buddy')
-  }
   return <div className='Toolbar'>
     <div className='tool-input'>
       <input type='range' min='30' max='120'
@@ -26,7 +23,7 @@ export default observer(() => {
     <div className='tool-button'>
       <img src='https://image.flaticon.com/icons/png/512/27/27185.png'
         style={{'width': '100%'}}
-        onClick={() => _button()}
+        onClick={() => store.check()}
       />
     </div>
   </div>
