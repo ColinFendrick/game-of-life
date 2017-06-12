@@ -7,21 +7,23 @@ class Store {
   }
   @observable active = [
     [6, 1],
-    [7, 4],
-    [1, 3]
+    [1, 3],
+    [1, 1]
   ]
 
   @observable searchArray = (arr, cell) => {
     for (let i = 0; i < arr.length; i++) {
       if (arr[i][0] === cell[0] && arr[i][1] === cell[1]) {
-        return true
+        return i + 1
       }
     }
   }
 
   @action update = (arr, cell) => {
     if (this.searchArray(arr, cell)) {
-      console.log('test')
+      console.log('heetsds')
+    } else {
+      this.active.push(cell)
     }
   }
 }
