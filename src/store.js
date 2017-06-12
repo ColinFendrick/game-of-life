@@ -6,6 +6,12 @@ class Store {
     'cols': 30
   }
 
+  @action change = (key, value) => {
+    let newSize = {...this.size}
+    newSize[key] = parseInt(value, 10)
+    this.size = newSize
+  }
+
   @observable active = [
     [2, 2],
     [2, 3],
@@ -24,12 +30,6 @@ class Store {
     }
   }
 
-  @action change = (key, value) => {
-    let newSize = {...this.size}
-    newSize[key] = parseInt(value, 10)
-    this.size = newSize
-  }
-
   @action update = cell => {
     const arr = this.active.map(s => s.slice(0, 2))
 
@@ -41,8 +41,12 @@ class Store {
     }
   }
 
+  @action alive = cell => {
+    this.active.push(cell)
+  }
+
   @action start = () => {
-    console.log('hey')
+    setTimeout(() => this.check(), 10)
   }
 
   @action check = () => {
@@ -52,7 +56,9 @@ class Store {
 
     for (let i = 0; i <= this.size.rows; i++) {
       for (let j = 0; j <= this.size.cols; j++) {
-        setTimeout(() => this.update([i, j]), 10)
+        if (arrRows.includes(i) && arrCols.includes(j)) {
+          this.alive([i, j])
+        }
       }
     }
   }
