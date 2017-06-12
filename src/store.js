@@ -1,5 +1,4 @@
 import { observable, action } from 'mobx'
-import _ from 'lodash'
 
 class Store {
   @observable size = {
@@ -13,7 +12,8 @@ class Store {
     [3, 3],
     [3, 4],
     [4, 2],
-    [4, 4]
+    [4, 4],
+    [22, 1]
   ]
 
   @observable searchArray = (arr, cell) => {
@@ -47,9 +47,14 @@ class Store {
 
   @action check = () => {
     const arr = store.active.map(s => s.slice(0, 2))
-    const rows = arr.map(x => x[0])
-    const columns = arr.map(x => x[1])
-    console.log(rows, columns)
+    const arrRows = arr.map(x => x[0])
+    const arrCols = arr.map(x => x[1])
+
+    for (let i = 0; i <= this.size.rows; i++) {
+      for (let j = 0; j <= this.size.cols; j++) {
+        setTimeout(() => this.update([i, j]), 10)
+      }
+    }
   }
 }
 
