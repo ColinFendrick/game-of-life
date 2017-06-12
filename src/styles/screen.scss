@@ -11,3 +11,27 @@ body {
   margin: 0;
   font: $base-text-size / 1 $base-font-family;
 }
+
+#root {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #ddd;
+}
+.Gameboard {
+  margin: 100px 0;
+  width: 500px;
+  height: 600px;
+  background-color: grey;
+  border: solid 2px yellow;
+  display: grid;
+  grid-gap: 3px;
+  grid-auto-columns: 1fr;
+  grid-auto-rows: 1fr;
+
+  div {
+    grid-column: 1;
+    grid-row: 10;
+    background-color: red;
+  }
+}
