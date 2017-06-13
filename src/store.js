@@ -7,6 +7,9 @@ class Store {
     'cols': 30
   }
 
+  @observable counts = {}
+  @observable potentials = []
+
   @action change = (key, value) => {
     let newSize = {...this.size}
     newSize[key] = parseInt(value, 10)
@@ -14,8 +17,7 @@ class Store {
   }
 
   @observable active = [
-    [5, 1],
-    [5, 2]
+    [5, 1]
   ]
 
   @observable searchArray = (arr, cell) => {
@@ -55,27 +57,27 @@ class Store {
     const arr = store.active.map(s => s.slice(0, 2))
     const arrRows = arr.map(x => x[0])
     const arrCols = arr.map(x => x[1])
-    let potentials = []
-    let counts = {}
+    this.counts = {}
+    this.potentials = []
 
     // Put all neighbors of active cells into an array
     for (let i = 0; i < arrRows.length; i++) {
-      potentials.push([arrRows[i], arrCols[i] + 1])
-      potentials.push([arrRows[i] + 1, arrCols[i] + 1])
-      potentials.push([arrRows[i] + 1, arrCols[i]])
-      potentials.push([arrRows[i] + 1, arrCols[i] - 1])
-      potentials.push([arrRows[i], arrCols[i] - 1])
-      potentials.push([arrRows[i] - 1, arrCols[i] - 1])
-      potentials.push([arrRows[i] - 1, arrCols[i]])
-      potentials.push([arrRows[i] - 1, arrCols[i] + 1])
+      this.potentials.push([arrRows[i], arrCols[i] + 1])
+      this.potentials.push([arrRows[i] + 1, arrCols[i] + 1])
+      this.potentials.push([arrRows[i] + 1, arrCols[i]])
+      this.potentials.push([arrRows[i] + 1, arrCols[i] - 1])
+      this.potentials.push([arrRows[i], arrCols[i] - 1])
+      this.potentials.push([arrRows[i] - 1, arrCols[i] - 1])
+      this.potentials.push([arrRows[i] - 1, arrCols[i]])
+      this.potentials.push([arrRows[i] - 1, arrCols[i] + 1])
     }
     // Count occurances of those neighbors
-    for (let i = 0; i < potentials.length; i++) {
-      let pos = potentials[i]
-      counts[pos] = counts[pos] ? counts[pos] + 1 : 1
+    for (let i = 0; i < this.potentials.length; i++) {
+      let pos = this.potentials[i]
+      this.counts[pos] = this.counts[pos] ? this.counts[pos] + 1 : 1
     }
     // Kill living cells w/ less than two neighbors
-    let alone = _.pickBy(counts, v => v < 2)
+    let alone = _.pickBy(this.counts, v => v < 2)
     let aloneArr = []
     for (let i = 0; i < Object.keys(alone).length; i++) {
       aloneArr.push([parseInt(Object.keys(alone)[i][0]), parseInt(Object.keys(alone)[i][2])])
@@ -87,42 +89,31 @@ class Store {
         }
       }
     }
-    // Create arrays where the duos and trios occur
-    let duos = _.pickBy(counts, v => v === 2)
-    let trios = _.pickBy(counts, v => v === 3)
-    // Put duos and trios into array of arrays
-    let duoArr = []
-    let trioArr = []
-    for (let i = 0; i < Object.keys(duos).length; i++) {
-      duoArr.push([parseInt(Object.keys(duos)[i][0]), parseInt(Object.keys(duos)[i][2])])
+    // Kill living cells w/ greater than 3 neighbors
+    let overPop = _.pickBy(this.counts, v => v > 3)
+    let overPopArr = []
+    for (let i = 0; i < Object.keys(overPop).length; i++) {
+      overPopArr.push([parseInt(Object.keys(overPop)[i][0]), parseInt(Object.keys(overPop)[i][2])])
     }
+    for (let i = 0; i < overPopArr.length; i++) {
+      for (let j = 0; j < arr.length; j++) {
+        if (overPopArr[i][0] === arr[j][0] && overPopArr[i][1] === arr[j][1]) {
+          this.kill([overPopArr[i][0], overPopArr[i][1]])
+        }
+      }
+    }
+    // Create arrays where the trios occur
+    let trios = _.pickBy(this.counts, v => v === 3)
+    // Put trios into array of arrays
+    let trioArr = []
     for (let i = 0; i < Object.keys(trios).length; i++) {
       trioArr.push([parseInt(Object.keys(trios)[i][0]), parseInt(Object.keys(trios)[i][2])])
     }
-    // Check duos and trios for active cells
-
-    // Create a unique array of strings of the neighboring potential cells
-    let uniques = []
-    for (let i = 0; i < potentials.length; i++) {
-      uniques.push(`${potentials[i][0]},${potentials[i][1]}`)
+    // All dead trios live!
+    for (let i = 0; i < trioArr.length; i++) {
+      this.alive([trioArr[i][0], trioArr[i][1]])
     }
-    uniques = _.uniq(uniques)
-
-    // for (let i = 0; i <= this.size.rows; i++) {
-    //   for (let j = 0; j <= this.size.cols; j++) {
-    //     let prox = 0
-    //     for (let k = 0; k < arrRows.length; k++) {
-    //       if (arrRows[k] === i || arrRows[k] + 1 === i || arrRows[k] - 1 === i) {
-    //         if (arrCols[k] === j || arrCols[k] + 1 === j || arrCols[k] - 1 === j) {
-    //           prox++
-    //         }
-    //       }
-    //       if (prox === 2 || prox === 3) {
-    //         this.alive([i, j])
-    //       }
-    //     }
-    //   }
-    // }
+    // Kill off singletons still to do
   }
 }
 
