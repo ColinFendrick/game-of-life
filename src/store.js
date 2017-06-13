@@ -7,9 +7,6 @@ class Store {
     'cols': 30
   }
 
-  @observable counts = {}
-  @observable potentials = []
-
   @action change = (key, value) => {
     let newSize = {...this.size}
     newSize[key] = parseInt(value, 10)
@@ -20,7 +17,12 @@ class Store {
     [5, 1],
     [5, 2],
     [6, 1],
-    [22, 19]
+    [6, 3],
+    [15, 1],
+    [15, 2],
+    [16, 1],
+    [16, 3],
+    [22, 9]
   ]
 
   @observable searchArray = (arr, cell) => {
@@ -41,7 +43,7 @@ class Store {
     }
   }
 
-  @action alive = cell => {
+  @action birth = cell => {
     this.active.push(cell)
   }
 
@@ -49,10 +51,6 @@ class Store {
     const arr = this.active.map(s => s.slice(0, 2))
     let index = this.searchArray(arr, cell)
     this.active.splice(index - 1, 1)
-  }
-
-  @action start = () => {
-    setTimeout(() => this.check(), 10)
   }
 
   // Kill living cells
@@ -82,37 +80,57 @@ class Store {
       this.kill(cell)
     }
   }
-
+  // Recursively kill all living cells w/ bad neighbors
   @action check = () => {
+    this.checkBirth()
     let arr = this.active.map(s => s.slice(0, 2))
     for (let j = 0; j < arr.length; j++) {
       this.countNeighbors(arr[j])
     }
   }
 
-  // @action check = () => {
-  //   const arr = this.active.map(s => s.slice(0, 2))
-  //   const arrRows = arr.map(x => x[0])
-  //   const arrCols = arr.map(x => x[1])
-  //   this.counts = {}
-  //   this.potentials = []
-  //
-  //   // Put all neighbors of active cells into an array
-  //   for (let i = 0; i < arrRows.length; i++) {
-  //     this.potentials.push([arrRows[i], arrCols[i] + 1])
-  //     this.potentials.push([arrRows[i] + 1, arrCols[i] + 1])
-  //     this.potentials.push([arrRows[i] + 1, arrCols[i]])
-  //     this.potentials.push([arrRows[i] + 1, arrCols[i] - 1])
-  //     this.potentials.push([arrRows[i], arrCols[i] - 1])
-  //     this.potentials.push([arrRows[i] - 1, arrCols[i] - 1])
-  //     this.potentials.push([arrRows[i] - 1, arrCols[i]])
-  //     this.potentials.push([arrRows[i] - 1, arrCols[i] + 1])
-  //   }
-  //   // Count occurances of those neighbors
-  //   for (let i = 0; i < this.potentials.length; i++) {
-  //     let pos = this.potentials[i]
-  //     this.counts[pos] = this.counts[pos] ? this.counts[pos] + 1 : 1
-  //   }
+  @action start = () => {
+    setTimeout(() => this.check(), 10)
+  }
+
+  @action checkBirth = () => {
+    const arr = this.active.map(s => s.slice(0, 2))
+    const arrRows = arr.map(x => x[0])
+    const arrCols = arr.map(x => x[1])
+    const counts = {}
+    const potentials = []
+    // Put all neighbors of active cells into an array
+    for (let i = 0; i < arrRows.length; i++) {
+      potentials.push([arrRows[i], arrCols[i] + 1])
+      potentials.push([arrRows[i] + 1, arrCols[i] + 1])
+      potentials.push([arrRows[i] + 1, arrCols[i]])
+      potentials.push([arrRows[i] + 1, arrCols[i] - 1])
+      potentials.push([arrRows[i], arrCols[i] - 1])
+      potentials.push([arrRows[i] - 1, arrCols[i] - 1])
+      potentials.push([arrRows[i] - 1, arrCols[i]])
+      potentials.push([arrRows[i] - 1, arrCols[i] + 1])
+    }
+    // Count occurances of those neighbors
+    for (let i = 0; i < potentials.length; i++) {
+      let pos = potentials[i]
+      counts[pos] = counts[pos] ? counts[pos] + 1 : 1
+    }
+    let trios = _.pickBy(counts, v => v === 3)
+    // Put trios into array of arrays
+    let trioArr = []
+    for (let i = 0; i < Object.keys(trios).length; i++) {
+      let trioKey = Object.keys(trios)[i].split(',')
+      let key0 = parseInt(trioKey[0])
+      let key1 = parseInt(trioKey[1])
+      trioArr.push([key0, key1])
+    }
+    console.log(trioArr)
+    // // All dead trios live!
+    // for (let i = 0; i < trioArr.length; i++) {
+    //   this.alive([trioArr[i][0], trioArr[i][1]])
+    // }
+  }
+
   //   // Kill living cells w/ less than two neighbors
   //   let alone = _.pickBy(this.counts, v => v < 2)
   //   let aloneArr = []
@@ -126,19 +144,7 @@ class Store {
   //       }
   //     }
   //   }
-  //   // Kill living cells w/ greater than 3 neighbors
-  //   let overPop = _.pickBy(this.counts, v => v > 3)
-  //   let overPopArr = []
-  //   for (let i = 0; i < Object.keys(overPop).length; i++) {
-  //     overPopArr.push([parseInt(Object.keys(overPop)[i][0]), parseInt(Object.keys(overPop)[i][2])])
-  //   }
-  //   for (let i = 0; i < overPopArr.length; i++) {
-  //     for (let j = 0; j < arr.length; j++) {
-  //       if (overPopArr[i][0] === arr[j][0] && overPopArr[i][1] === arr[j][1]) {
-  //         this.kill([overPopArr[i][0], overPopArr[i][1]])
-  //       }
-  //     }
-  //   }
+  //
   //   // Create arrays where the trios occur
   //   let trios = _.pickBy(this.counts, v => v === 3)
   //   // Put trios into array of arrays
