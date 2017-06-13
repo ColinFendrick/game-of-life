@@ -1,4 +1,4 @@
-import { observable, action } from 'mobx'
+import { observable, action, computed } from 'mobx'
 import _ from 'lodash'
 
 class Store {
@@ -17,8 +17,13 @@ class Store {
   }
 
   @observable active = [
-    [5, 1]
+    [5, 1],
+    [5, 2],
+    [6, 1],
+    [22, 19]
   ]
+
+  @computed get arr () { this.active.map(s => s.slice(0, 2)) }
 
   @observable searchArray = (arr, cell) => {
     for (let i = 0; i < arr.length; i++) {
@@ -30,13 +35,13 @@ class Store {
 
   @action update = cell => {
     const arr = this.active.map(s => s.slice(0, 2))
-
     if (this.searchArray(arr, cell)) {
       let index = this.searchArray(arr, cell)
       this.active.splice(index - 1, 1)
     } else {
       this.active.push(cell)
     }
+    console.log(arr)
   }
 
   @action alive = cell => {
@@ -44,8 +49,7 @@ class Store {
   }
 
   @action kill = cell => {
-    const arr = this.active.map(s => s.slice(0, 2))
-    let index = this.searchArray(arr, cell)
+    let index = this.searchArray(this.arr, cell)
     this.active.splice(index - 1, 1)
   }
 
@@ -53,69 +57,103 @@ class Store {
     setTimeout(() => this.check(), 10)
   }
 
-  @action check = () => {
-    const arr = store.active.map(s => s.slice(0, 2))
-    const arrRows = arr.map(x => x[0])
-    const arrCols = arr.map(x => x[1])
-    this.counts = {}
-    this.potentials = []
+  // Kill living cells
+  @action countNeighbors = cell => {
+    const arr = this.active.map(s => s.slice(0, 2))
+    let neighbors = 0
+    for (let i = 0; i < arr.length; i++) {
+      if (
+        (arr[i][0] + 1 === cell[0] &&
+        (arr[i][1] === cell[1] ||
+        arr[i][1] + 1 === cell[1] ||
+        arr[i][1] - 1 === cell[1])) ||
 
-    // Put all neighbors of active cells into an array
-    for (let i = 0; i < arrRows.length; i++) {
-      this.potentials.push([arrRows[i], arrCols[i] + 1])
-      this.potentials.push([arrRows[i] + 1, arrCols[i] + 1])
-      this.potentials.push([arrRows[i] + 1, arrCols[i]])
-      this.potentials.push([arrRows[i] + 1, arrCols[i] - 1])
-      this.potentials.push([arrRows[i], arrCols[i] - 1])
-      this.potentials.push([arrRows[i] - 1, arrCols[i] - 1])
-      this.potentials.push([arrRows[i] - 1, arrCols[i]])
-      this.potentials.push([arrRows[i] - 1, arrCols[i] + 1])
-    }
-    // Count occurances of those neighbors
-    for (let i = 0; i < this.potentials.length; i++) {
-      let pos = this.potentials[i]
-      this.counts[pos] = this.counts[pos] ? this.counts[pos] + 1 : 1
-    }
-    // Kill singleton living cells
-    // Kill living cells w/ less than two neighbors
-    let alone = _.pickBy(this.counts, v => v < 2)
-    let aloneArr = []
-    for (let i = 0; i < Object.keys(alone).length; i++) {
-      aloneArr.push([parseInt(Object.keys(alone)[i][0]), parseInt(Object.keys(alone)[i][2])])
-    }
-    for (let i = 0; i < aloneArr.length; i++) {
-      for (let j = 0; j < arr.length; j++) {
-        if (aloneArr[i][0] === arr[j][0] && aloneArr[i][1] === arr[j][1]) {
-          this.kill([aloneArr[i][0], aloneArr[i][1]])
-        }
+        (arr[i][0] - 1 === cell[0] &&
+        (arr[i][1] === cell[1] ||
+        arr[i][1] + 1 === cell[1] ||
+        arr[i][1] - 1 === cell[1])) ||
+
+        (arr[i][0] === cell[0] &&
+        (arr[i][1] + 1 === cell[1] ||
+        arr[i][1] - 1 === cell[1]))
+      ) {
+        neighbors++
       }
     }
-    // Kill living cells w/ greater than 3 neighbors
-    let overPop = _.pickBy(this.counts, v => v > 3)
-    let overPopArr = []
-    for (let i = 0; i < Object.keys(overPop).length; i++) {
-      overPopArr.push([parseInt(Object.keys(overPop)[i][0]), parseInt(Object.keys(overPop)[i][2])])
-    }
-    for (let i = 0; i < overPopArr.length; i++) {
-      for (let j = 0; j < arr.length; j++) {
-        if (overPopArr[i][0] === arr[j][0] && overPopArr[i][1] === arr[j][1]) {
-          this.kill([overPopArr[i][0], overPopArr[i][1]])
-        }
-      }
-    }
-    // Create arrays where the trios occur
-    let trios = _.pickBy(this.counts, v => v === 3)
-    // Put trios into array of arrays
-    let trioArr = []
-    for (let i = 0; i < Object.keys(trios).length; i++) {
-      console.log(Object.keys(trios))
-      trioArr.push([parseInt(Object.keys(trios)[i][0]), parseInt(Object.keys(trios)[i][2])])
-    }
-    // All dead trios live!
-    for (let i = 0; i < trioArr.length; i++) {
-      this.alive([trioArr[i][0], trioArr[i][1]])
+    if (neighbors < 2 || neighbors > 3) {
+      this.kill(cell)
     }
   }
+
+  @action check = () => {
+    console.log(this.arr)
+    for (let j = 0; j < this.arr.length; j++) {
+      this.countNeighbors(this.arr[j])
+    }
+  }
+
+  // @action check = () => {
+  //   const arr = this.active.map(s => s.slice(0, 2))
+  //   const arrRows = arr.map(x => x[0])
+  //   const arrCols = arr.map(x => x[1])
+  //   this.counts = {}
+  //   this.potentials = []
+  //
+  //   // Put all neighbors of active cells into an array
+  //   for (let i = 0; i < arrRows.length; i++) {
+  //     this.potentials.push([arrRows[i], arrCols[i] + 1])
+  //     this.potentials.push([arrRows[i] + 1, arrCols[i] + 1])
+  //     this.potentials.push([arrRows[i] + 1, arrCols[i]])
+  //     this.potentials.push([arrRows[i] + 1, arrCols[i] - 1])
+  //     this.potentials.push([arrRows[i], arrCols[i] - 1])
+  //     this.potentials.push([arrRows[i] - 1, arrCols[i] - 1])
+  //     this.potentials.push([arrRows[i] - 1, arrCols[i]])
+  //     this.potentials.push([arrRows[i] - 1, arrCols[i] + 1])
+  //   }
+  //   // Count occurances of those neighbors
+  //   for (let i = 0; i < this.potentials.length; i++) {
+  //     let pos = this.potentials[i]
+  //     this.counts[pos] = this.counts[pos] ? this.counts[pos] + 1 : 1
+  //   }
+  //   // Kill living cells w/ less than two neighbors
+  //   let alone = _.pickBy(this.counts, v => v < 2)
+  //   let aloneArr = []
+  //   for (let i = 0; i < Object.keys(alone).length; i++) {
+  //     aloneArr.push([parseInt(Object.keys(alone)[i][0]), parseInt(Object.keys(alone)[i][2])])
+  //   }
+  //   for (let i = 0; i < aloneArr.length; i++) {
+  //     for (let j = 0; j < arr.length; j++) {
+  //       if (aloneArr[i][0] === arr[j][0] && aloneArr[i][1] === arr[j][1]) {
+  //         this.kill([aloneArr[i][0], aloneArr[i][1]])
+  //       }
+  //     }
+  //   }
+  //   // Kill living cells w/ greater than 3 neighbors
+  //   let overPop = _.pickBy(this.counts, v => v > 3)
+  //   let overPopArr = []
+  //   for (let i = 0; i < Object.keys(overPop).length; i++) {
+  //     overPopArr.push([parseInt(Object.keys(overPop)[i][0]), parseInt(Object.keys(overPop)[i][2])])
+  //   }
+  //   for (let i = 0; i < overPopArr.length; i++) {
+  //     for (let j = 0; j < arr.length; j++) {
+  //       if (overPopArr[i][0] === arr[j][0] && overPopArr[i][1] === arr[j][1]) {
+  //         this.kill([overPopArr[i][0], overPopArr[i][1]])
+  //       }
+  //     }
+  //   }
+  //   // Create arrays where the trios occur
+  //   let trios = _.pickBy(this.counts, v => v === 3)
+  //   // Put trios into array of arrays
+  //   let trioArr = []
+  //   for (let i = 0; i < Object.keys(trios).length; i++) {
+  //     console.log(Object.keys(trios))
+  //     trioArr.push([parseInt(Object.keys(trios)[i][0]), parseInt(Object.keys(trios)[i][2])])
+  //   }
+  //   // All dead trios live!
+  //   for (let i = 0; i < trioArr.length; i++) {
+  //     this.alive([trioArr[i][0], trioArr[i][1]])
+  //   }
+  // }
 }
 
 const store = new Store()

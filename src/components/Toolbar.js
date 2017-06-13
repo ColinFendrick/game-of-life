@@ -20,6 +20,7 @@ export default observer(() => {
       />
       Height {store.size.rows}
     </div>
+    {store.active.length}
     <div className='tool-button'>
       <img src='https://image.flaticon.com/icons/png/512/27/27185.png'
         style={{'width': '100%'}}
