@@ -23,8 +23,6 @@ class Store {
     [22, 19]
   ]
 
-  @computed get arr () { this.active.map(s => s.slice(0, 2)) }
-
   @observable searchArray = (arr, cell) => {
     for (let i = 0; i < arr.length; i++) {
       if (arr[i][0] === cell[0] && arr[i][1] === cell[1]) {
@@ -41,7 +39,6 @@ class Store {
     } else {
       this.active.push(cell)
     }
-    console.log(arr)
   }
 
   @action alive = cell => {
@@ -86,9 +83,10 @@ class Store {
   }
 
   @action check = () => {
-    console.log(this.arr)
-    for (let j = 0; j < this.arr.length; j++) {
-      this.countNeighbors(this.arr[j])
+    let arr = this.active.map(s => s.slice(0, 2))
+    console.log(arr.length)
+    for (let j = 0; j < arr.length; j++) {
+      this.countNeighbors(arr[j])
     }
   }
 
