@@ -46,7 +46,8 @@ class Store {
   }
 
   @action kill = cell => {
-    let index = this.searchArray(this.arr, cell)
+    const arr = this.active.map(s => s.slice(0, 2))
+    let index = this.searchArray(arr, cell)
     this.active.splice(index - 1, 1)
   }
 
@@ -84,7 +85,6 @@ class Store {
 
   @action check = () => {
     let arr = this.active.map(s => s.slice(0, 2))
-    console.log(arr.length)
     for (let j = 0; j < arr.length; j++) {
       this.countNeighbors(arr[j])
     }
