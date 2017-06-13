@@ -7,12 +7,15 @@ class Store {
     'cols': 30
   }
 
-  @observable random = 10
+  @observable running = false
+
+  @observable random = 200
   @action setRandom = value => {
     this.random = value
   }
 
   @action setActive = () => {
+    this.active = []
     for (let i = 0; i < this.random; i++) {
       this.active.push([Math.floor(Math.random() * this.size.rows),
         Math.floor(Math.random() * this.size.cols)])
@@ -94,10 +97,12 @@ class Store {
       this.countNeighbors(arr[j])
     }
     this.checkBirth()
+    console.log('run')
   }
 
   @action start = () => {
-    setTimeout(() => this.check(), this.timer)
+    this.running = !this.running
+    setInterval(() => this.check(), 300)
   }
 
   @action checkBirth = () => {

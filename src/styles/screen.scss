@@ -15,14 +15,12 @@ body {
 #root {
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
   background-color: #ddd;
   text-align: center;
 }
 
 .Gameboard {
-  margin: 100px 0;
+  margin: 20px 0;
   width: 500px;
   height: 300px;
   background-color: grey;
@@ -42,12 +40,20 @@ body {
 
 .Toolbar {
   display: flex;
-  justify-content: space-around;
   align-items: center;
+  justify-content: space-around;
   margin: 0;
 
   .tool-button {
     width: 24px;
     margin: 0;
+  }
+
+  .tool-input {
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
   }
 }

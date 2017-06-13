@@ -34,11 +34,13 @@ class Toolbar extends Component {
           value={store.timer}
           onChange={e => store.setTimer(e.target.value)}
         />
-      Timer(ms) {store.timer}
+      Timer {store.timer}(ms)
       </div>
-      <div>
-        <input type='number' value={store.random}
+      <div className='tool-input'>
+        <input type='range' min='0' max={(store.size.rows - 3) * (store.size.cols - 3)}
+          value={store.random}
           onChange={e => store.setRandom(e.target.value)} />
+          Cells {store.random}
       </div>
       <div className='tool-button'>
         <img src='https://image.flaticon.com/icons/png/512/27/27185.png'
