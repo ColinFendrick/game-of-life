@@ -1,10 +1,22 @@
-import { observable, action, computed } from 'mobx'
+import { observable, action } from 'mobx'
 import _ from 'lodash'
 
 class Store {
   @observable size = {
     'rows': 30,
     'cols': 30
+  }
+
+  @observable random = 10
+  @action setRandom = value => {
+    this.random = value
+  }
+
+  @action setActive = () => {
+    for (let i = 0; i < this.random; i++) {
+      this.active.push([Math.floor(Math.random() * this.size.rows),
+        Math.floor(Math.random() * this.size.cols)])
+    }
   }
 
   @observable timer = 10
@@ -18,18 +30,7 @@ class Store {
     this.size = newSize
   }
 
-  @observable active = [
-    [5, 1],
-    [5, 2],
-    [6, 1],
-    [6, 3],
-    [15, 1],
-    [15, 2],
-    [16, 1],
-    [16, 3],
-    [22, 9],
-    [6, 2]
-  ]
+  @observable active = []
 
   @observable searchArray = (arr, cell) => {
     for (let i = 0; i < arr.length; i++) {
