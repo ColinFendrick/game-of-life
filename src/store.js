@@ -76,6 +76,7 @@ class Store {
       let pos = this.potentials[i]
       this.counts[pos] = this.counts[pos] ? this.counts[pos] + 1 : 1
     }
+    // Kill singleton living cells
     // Kill living cells w/ less than two neighbors
     let alone = _.pickBy(this.counts, v => v < 2)
     let aloneArr = []
@@ -107,13 +108,13 @@ class Store {
     // Put trios into array of arrays
     let trioArr = []
     for (let i = 0; i < Object.keys(trios).length; i++) {
+      console.log(Object.keys(trios))
       trioArr.push([parseInt(Object.keys(trios)[i][0]), parseInt(Object.keys(trios)[i][2])])
     }
     // All dead trios live!
     for (let i = 0; i < trioArr.length; i++) {
       this.alive([trioArr[i][0], trioArr[i][1]])
     }
-    // Kill off singletons still to do
   }
 }
 
