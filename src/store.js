@@ -71,6 +71,15 @@ class Store {
     // Create arrays where the duos and trios occur
     let duos = _.pickBy(counts, v => v === 2)
     let trios = _.pickBy(counts, v => v === 3)
+    // Put duos and trios into array of arrays
+    let duoArr = []
+    let trioArr = []
+    for (let i = 0; i < Object.keys(duos).length; i++) {
+      duoArr.push([parseInt(Object.keys(duos)[i][0]), parseInt(Object.keys(duos)[i][2])])
+    }
+    for (let i = 0; i < Object.keys(trios).length; i++) {
+      trioArr.push([parseInt(Object.keys(trios)[i][0]), parseInt(Object.keys(trios)[i][2])])
+    }
     // Create a unique array of strings of the neighboring potential cells
     let uniques = []
     for (let i = 0; i < potentials.length; i++) {
