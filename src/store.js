@@ -41,6 +41,12 @@ class Store {
     this.active.push(cell)
   }
 
+  @action kill = cell => {
+    const arr = this.active.map(s => s.slice(0, 2))
+    let index = this.searchArray(arr, cell)
+    this.active.splice(index - 1, 1)
+  }
+
   @action start = () => {
     setTimeout(() => this.check(), 10)
   }
@@ -68,6 +74,19 @@ class Store {
       let pos = potentials[i]
       counts[pos] = counts[pos] ? counts[pos] + 1 : 1
     }
+    // Kill living cells w/ less than two neighbors
+    let alone = _.pickBy(counts, v => v < 2)
+    let aloneArr = []
+    for (let i = 0; i < Object.keys(alone).length; i++) {
+      aloneArr.push([parseInt(Object.keys(alone)[i][0]), parseInt(Object.keys(alone)[i][2])])
+    }
+    for (let i = 0; i < aloneArr.length; i++) {
+      for (let j = 0; j < arr.length; j++) {
+        if (aloneArr[i][0] === arr[j][0] && aloneArr[i][1] === arr[j][1]) {
+          this.kill([aloneArr[i][0], aloneArr[i][1]])
+        }
+      }
+    }
     // Create arrays where the duos and trios occur
     let duos = _.pickBy(counts, v => v === 2)
     let trios = _.pickBy(counts, v => v === 3)
@@ -80,6 +99,8 @@ class Store {
     for (let i = 0; i < Object.keys(trios).length; i++) {
       trioArr.push([parseInt(Object.keys(trios)[i][0]), parseInt(Object.keys(trios)[i][2])])
     }
+    // Check duos and trios for active cells
+
     // Create a unique array of strings of the neighboring potential cells
     let uniques = []
     for (let i = 0; i < potentials.length; i++) {
