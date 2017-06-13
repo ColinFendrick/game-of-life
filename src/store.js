@@ -7,6 +7,11 @@ class Store {
     'cols': 30
   }
 
+  @observable timer = 10
+  @action setTimer = value => {
+    this.timer = value
+  }
+
   @action change = (key, value) => {
     let newSize = {...this.size}
     newSize[key] = parseInt(value, 10)
@@ -91,7 +96,7 @@ class Store {
   }
 
   @action start = () => {
-    setTimeout(() => this.check(), 10)
+    setTimeout(() => this.check(), this.timer)
   }
 
   @action checkBirth = () => {

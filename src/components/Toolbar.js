@@ -20,7 +20,13 @@ export default observer(() => {
       />
       Height {store.size.rows}
     </div>
-    {store.active.length}
+    <div className='tool-input'>
+      <input type='range' min='10' max='2000'
+        value={store.timer}
+        onChange={e => store.setTimer(e.target.value)}
+      />
+      Timer(ms) {store.timer}
+    </div>
     <div className='tool-button'>
       <img src='https://image.flaticon.com/icons/png/512/27/27185.png'
         style={{'width': '100%'}}
