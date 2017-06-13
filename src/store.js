@@ -83,11 +83,11 @@ class Store {
   }
   // Recursively kill all living cells w/ bad neighbors
   @action check = () => {
-    this.checkBirth()
     let arr = this.active.map(s => s.slice(0, 2))
     for (let j = 0; j < arr.length; j++) {
       this.countNeighbors(arr[j])
     }
+    this.checkBirth()
   }
 
   @action start = () => {
@@ -125,20 +125,25 @@ class Store {
       let key1 = parseInt(trioKey[1])
       trioArr.push([key0, key1])
     }
-    console.log(trioArr)
+    // console.log(trioArr)
     // Check if any of these trios are alive
+    let index = []
+    // Find positions of alive trio-neighbored cells
     for (let i = 0; i < trioArr.length; i++) {
       for (let j = 0; j < arr.length; j++) {
         if (arr[j][0] === trioArr[i][0] && arr[j][1] === trioArr[i][1]) {
-          // trioArr.splice(i, 1)
+          index.push(i)
         }
       }
     }
-    // console.log(trioArr)
+    // ...then remove those cells from the trio array
+    for (let i = 0; i < index.length; i++) {
+      trioArr.splice(index, 1)
+    }
     // All dead trios live!
-    // for (let i = 0; i < trioArr.length; i++) {
-    //   this.alive([trioArr[i][0], trioArr[i][1]])
-    // }
+    for (let i = 0; i < trioArr.length; i++) {
+      this.birth([trioArr[i][0], trioArr[i][1]])
+    }
   }
 }
 
