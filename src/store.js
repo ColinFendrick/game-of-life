@@ -22,7 +22,8 @@ class Store {
     [15, 2],
     [16, 1],
     [16, 3],
-    [22, 9]
+    [22, 9],
+    [6, 2]
   ]
 
   @observable searchArray = (arr, cell) => {
@@ -125,39 +126,20 @@ class Store {
       trioArr.push([key0, key1])
     }
     console.log(trioArr)
-    // // All dead trios live!
+    // Check if any of these trios are alive
+    for (let i = 0; i < trioArr.length; i++) {
+      for (let j = 0; j < arr.length; j++) {
+        if (arr[j][0] === trioArr[i][0] && arr[j][1] === trioArr[i][1]) {
+          // trioArr.splice(i, 1)
+        }
+      }
+    }
+    // console.log(trioArr)
+    // All dead trios live!
     // for (let i = 0; i < trioArr.length; i++) {
     //   this.alive([trioArr[i][0], trioArr[i][1]])
     // }
   }
-
-  //   // Kill living cells w/ less than two neighbors
-  //   let alone = _.pickBy(this.counts, v => v < 2)
-  //   let aloneArr = []
-  //   for (let i = 0; i < Object.keys(alone).length; i++) {
-  //     aloneArr.push([parseInt(Object.keys(alone)[i][0]), parseInt(Object.keys(alone)[i][2])])
-  //   }
-  //   for (let i = 0; i < aloneArr.length; i++) {
-  //     for (let j = 0; j < arr.length; j++) {
-  //       if (aloneArr[i][0] === arr[j][0] && aloneArr[i][1] === arr[j][1]) {
-  //         this.kill([aloneArr[i][0], aloneArr[i][1]])
-  //       }
-  //     }
-  //   }
-  //
-  //   // Create arrays where the trios occur
-  //   let trios = _.pickBy(this.counts, v => v === 3)
-  //   // Put trios into array of arrays
-  //   let trioArr = []
-  //   for (let i = 0; i < Object.keys(trios).length; i++) {
-  //     console.log(Object.keys(trios))
-  //     trioArr.push([parseInt(Object.keys(trios)[i][0]), parseInt(Object.keys(trios)[i][2])])
-  //   }
-  //   // All dead trios live!
-  //   for (let i = 0; i < trioArr.length; i++) {
-  //     this.alive([trioArr[i][0], trioArr[i][1]])
-  //   }
-  // }
 }
 
 const store = new Store()
