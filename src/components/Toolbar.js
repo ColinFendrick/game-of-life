@@ -45,7 +45,7 @@ class Toolbar extends Component {
       <div className='tool-button'>
         <img src='https://image.flaticon.com/icons/png/512/27/27185.png'
           style={{'width': '100%'}}
-          onClick={() => store.start()}
+          onClick={() => store.check()}
         />
       </div>
     </div>

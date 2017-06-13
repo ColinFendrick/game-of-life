@@ -54,7 +54,10 @@ class Store {
   }
 
   @action birth = cell => {
-    this.active.push(cell)
+    const arr = this.active.map(s => s.slice(0, 2))
+    if (!this.searchArray(arr, cell)) {
+      this.active.push(cell)
+    }
   }
 
   @action kill = cell => {
@@ -65,7 +68,8 @@ class Store {
 
   // Kill living cells
   @action countNeighbors = cell => {
-    const arr = this.active.map(s => s.slice(0, 2))
+    const arr = _.uniq(this.active.map(s => s.slice(0, 2)))
+    console.log(arr)
     let neighbors = 0
     for (let i = 0; i < arr.length; i++) {
       if (
@@ -97,12 +101,11 @@ class Store {
       this.countNeighbors(arr[j])
     }
     this.checkBirth()
-    console.log('run')
   }
 
   @action start = () => {
     this.running = !this.running
-    setInterval(() => this.check(), 300)
+    this.running ? setInterval(this.check, 30) : clearInterval(setInterval(this.check, 30))
   }
 
   @action checkBirth = () => {
@@ -136,7 +139,6 @@ class Store {
       let key1 = parseInt(trioKey[1])
       trioArr.push([key0, key1])
     }
-    // console.log(trioArr)
     // Check if any of these trios are alive
     let index = []
     // Find positions of alive trio-neighbored cells
