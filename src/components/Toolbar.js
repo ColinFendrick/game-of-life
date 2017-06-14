@@ -7,10 +7,6 @@ class Toolbar extends Component {
     store.setActive()
   }
 
-  componentDidUpdate () {
-    store.setActive()
-  }
-
   render () {
     return <div className='Toolbar'>
       <div className='tool-input'>
@@ -45,7 +41,7 @@ class Toolbar extends Component {
       <div className='tool-button'>
         <img src='https://image.flaticon.com/icons/png/512/27/27185.png'
           style={{'width': '100%'}}
-          onClick={() => store.check()}
+          onClick={store.startRun}
         />
       </div>
     </div>

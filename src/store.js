@@ -8,6 +8,9 @@ class Store {
   }
 
   @observable running = false
+  @action startRun = () => {
+    this.running = !this.running
+  }
 
   @observable random = 200
   @action setRandom = value => {
@@ -22,7 +25,7 @@ class Store {
     }
   }
 
-  @observable timer = 10
+  @observable timer = 1000
   @action setTimer = value => {
     this.timer = value
   }
@@ -100,11 +103,12 @@ class Store {
       this.countNeighbors(arr[j])
     }
     this.checkBirth()
+    console.log('checking')
   }
 
   @action start = () => {
     this.running = !this.running
-    this.running ? setInterval(this.check, 30) : clearInterval(setInterval(this.check, 30))
+    this.running ? setInterval(() => this.check(), this.timer) : clearInterval(setInterval(this.check, 30))
   }
 
   @action checkBirth = () => {
