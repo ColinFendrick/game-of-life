@@ -68,8 +68,7 @@ class Store {
 
   // Kill living cells
   @action countNeighbors = cell => {
-    const arr = _.uniq(this.active.map(s => s.slice(0, 2)))
-    console.log(arr)
+    const arr = this.active.map(s => s.slice(0, 2))
     let neighbors = 0
     for (let i = 0; i < arr.length; i++) {
       if (
