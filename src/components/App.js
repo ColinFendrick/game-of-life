@@ -5,7 +5,7 @@ import Toolbar from './Toolbar'
 
 class App extends Component {
   render () {
-    return <div>
+    return <div className='app'>
       <Header />
       <Gameboard />
       <Toolbar />

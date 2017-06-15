@@ -13,7 +13,12 @@ class Gameboard extends Component {
           items.push(props.children(i, j))
         }
       }
-      return <div className='Gameboard'>{items}</div>
+
+      return <div className='Gameboard'>
+        <div className='game'>
+          {items}
+        </div>
+      </div>
     }
 
     return <Repeat rows={store.size.rows} cols={store.size.cols}>
